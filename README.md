@@ -2,7 +2,7 @@
 
 Учебная работа по заданию [wd-task-2](https://needle.voklaf.ru/teacher-portal/course.html?course=web-design&material=wd-task-2). Приложение на чистом JavaScript ES6+, HTML и CSS, без фреймворков и сборщика.
 
-**Сайт:** https://orbita-workday.wiry-emu-4131.chatgpt.site
+**Сайт:** https://orbita-workday.jigaloffkir.chatgpt.site
 
 **Репозиторий:** https://github.com/kzhigalov-dev/orbita-dashboard
 
