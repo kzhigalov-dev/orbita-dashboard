@@ -8,6 +8,7 @@ import HabitsWidget from "./HabitsWidget.js";
 import ClockWidget from "./ClockWidget.js";
 import CalculatorWidget from "./CalculatorWidget.js";
 import WidgetLayout from "./WidgetLayout.js";
+import WidgetDrag from "./WidgetDrag.js";
 const registry = {
   todo: ToDoWidget,
   weather: WeatherWidget,
@@ -26,8 +27,10 @@ export default class Dashboard {
     this.widgets = [];
     this.restoring = false;
     this.layout = new WidgetLayout(container);
+    this.drag = new WidgetDrag(this);
   }
   addWidget(widgetType, config = {}, { focus = true } = {}) {
+    this.drag.cancel();
     if (!Object.hasOwn(registry, widgetType))
       throw new Error("Неизвестный тип виджета");
     if (this.widgets.length >= 20) {
@@ -79,6 +82,7 @@ export default class Dashboard {
     this.addWidget(original.type, config);
   }
   removeWidget(widgetId) {
+    this.drag.cancel();
     const index = this.widgets.findIndex((w) => w.id === widgetId);
     if (index < 0) return;
     const [widget] = this.widgets.splice(index, 1);
@@ -91,24 +95,40 @@ export default class Dashboard {
     this.announce(`Виджет «${widget.title}» удалён.`);
   }
   moveWidget(id, delta) {
+    this.drag.cancel();
     const index = this.widgets.findIndex((w) => w.id === id);
     const target = index + delta;
     if (index < 0 || target < 0 || target >= this.widgets.length) return;
     const focused = document.activeElement;
-    const positions = new Map(
-      this.widgets.map((w) => [w.id, w.root.getBoundingClientRect()]),
-    );
-    this.widgets.forEach((w) => w.stopAnimation(w.root));
+    const positions = this.positions();
     const [widget] = this.widgets.splice(index, 1);
     this.widgets.splice(target, 0, widget);
     this.widgets.forEach((w) => this.container.append(w.root));
     this.update();
     this.save();
+    this.animatePositions(positions);
+    const fallback = delta < 0 ? widget.downButton : widget.upButton;
+    (focused?.isConnected && !focused.disabled ? focused : fallback).focus();
+    this.announce(
+      `«${widget.title}»: позиция ${target + 1} из ${this.widgets.length}.`,
+    );
+  }
+  positions(except) {
+    const positions = new Map();
+    this.widgets.forEach((w) => {
+      if (w === except) return;
+      positions.set(w.id, w.root.getBoundingClientRect());
+      w.stopAnimation(w.root);
+    });
+    return positions;
+  }
+  animatePositions(positions, except) {
     this.widgets.forEach((w) => {
       const before = positions.get(w.id);
+      if (w === except || !before) return;
       const after = w.root.getBoundingClientRect();
-      const x = before.left - after.left;
-      const y = before.top - after.top;
+      const x = before.left - after.left,
+        y = before.top - after.top;
       if (x || y)
         w.animate(
           w.root,
@@ -116,14 +136,9 @@ export default class Dashboard {
             { transform: `translate(${x}px, ${y}px)` },
             { transform: "translate(0, 0)" },
           ],
-          { duration: 360 },
+          { duration: 280 },
         );
     });
-    const fallback = delta < 0 ? widget.downButton : widget.upButton;
-    (focused?.isConnected && !focused.disabled ? focused : fallback).focus();
-    this.announce(
-      `«${widget.title}»: позиция ${target + 1} из ${this.widgets.length}.`,
-    );
   }
   update() {
     this.widgets.forEach((w, i) => {
@@ -205,6 +220,7 @@ export default class Dashboard {
     this.update();
   }
   destroy() {
+    this.drag.destroy();
     this.layout.destroy();
     this.widgets.forEach((w) => w.destroy());
     this.widgets = [];

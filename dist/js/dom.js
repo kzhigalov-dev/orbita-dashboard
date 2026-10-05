@@ -5,6 +5,7 @@ export function el(tag, className = "", text) {
   return node;
 }
 const paths = {
+  grip: "M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01",
   settings: "M4 7h16M4 17h16M9 4v6M15 14v6",
   edit: "m14 4 6 6M4 20l5-1L20 8a2 2 0 0 0-4-4L5 15l-1 5Z",
   star: "m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z",

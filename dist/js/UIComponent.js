@@ -80,6 +80,24 @@ export default class UIComponent {
     root.setAttribute("aria-labelledby", `${this.id}-title`);
     const header = el("header", "widget-header");
     const titleGroup = el("div", "widget-title");
+    this.dragButton = button(
+      `Перетащить «${this.title}»`,
+      "grip",
+      "icon-button widget-drag-handle",
+    );
+    this.dragButton.setAttribute("aria-describedby", "drag-help");
+    titleGroup.append(this.dragButton);
+    this.listen(this.dragButton, "keydown", (event) => {
+      if (["ArrowUp", "ArrowDown"].includes(event.key)) {
+        event.preventDefault();
+        this.onMove?.(this.id, event.key === "ArrowUp" ? -1 : 1);
+      }
+    });
+    this.listen(this.dragButton, "click", () =>
+      this.announce(
+        "Перетащите виджет за заголовок или меняйте порядок стрелками вверх и вниз.",
+      ),
+    );
     titleGroup.append(
       icon(
         {
@@ -230,6 +248,7 @@ export default class UIComponent {
         [this.downButton, "Переместить"],
         [this.closeButton, "Удалить виджет"],
         [this.settingsButton, "Настроить"],
+        [this.dragButton, "Перетащить"],
       ]) {
         const direction =
           b === this.upButton
