@@ -162,8 +162,9 @@
 }
 .task-label input {
   appearance: none;
+  margin: 0;
   padding: 0;
-  border: 1.5px solid #84967d;
+  border: 2px solid #84967d;
   width: 20px;
   height: 20px;
   min-height: 20px;
@@ -178,9 +179,20 @@
   background: var(--accent);
 }
 .task-label input:checked::after {
-  content: "✓";
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
   color: #fff;
-  font-size: var(--type-body);
+  background: currentColor;
+  -webkit-mask: url("../assets/check.svg") center / contain no-repeat;
+  mask: url("../assets/check.svg") center / contain no-repeat;
+}
+@media (forced-colors: active) {
+  .task-label input:checked::after {
+    color: CanvasText;
+    forced-color-adjust: none;
+  }
 }
 .task-label span {
   overflow-wrap: anywhere;
@@ -262,8 +274,10 @@
   font-size: var(--type-meta);
 }
 .refresh-button svg {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transform-origin: 50% 50%;
 }
 .city-select {
   width: 100%;
@@ -574,7 +588,7 @@
   border-radius: 50%;
 }
 .task-label input {
-  border-radius: 4px;
+  border-radius: 5px;
 }
 .task-row {
   border-color: #e6eadf;
