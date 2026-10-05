@@ -80,10 +80,9 @@ export default class UIComponent {
     this.root.classList.toggle("is-minimized", this.minimized);
     this.toggleButton.textContent = this.minimized ? "+" : "−";
     this.toggleButton.setAttribute("aria-expanded", String(!this.minimized));
-    this.toggleButton.setAttribute(
-      "aria-label",
-      `${this.minimized ? "Развернуть" : "Свернуть"} «${this.title}»`,
-    );
+    const label = `${this.minimized ? "Развернуть" : "Свернуть"} «${this.title}»`;
+    this.toggleButton.setAttribute("aria-label", label);
+    this.toggleButton.title = label;
   }
   minimize() {
     this.minimized = !this.minimized;

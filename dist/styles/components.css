@@ -1,7 +1,6 @@
+/* Independent widget styles and responsive states. */
 .widget {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
   min-width: 0;
   overflow: clip;
 }
@@ -14,9 +13,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  padding: 18px 16px;
   border-bottom: 1px solid #e3e9df;
-  min-height: 72px;
 }
 .widget-title {
   display: flex;
@@ -27,12 +24,8 @@
 .widget-title > svg {
   color: #48634d;
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
 }
 .widget-title h2 {
-  font-size: 14px;
-  font-weight: 600;
   line-height: 1.4;
   margin: 0;
   overflow-wrap: anywhere;
@@ -40,7 +33,6 @@
 .widget-actions {
   display: flex;
   align-items: center;
-  gap: 1px;
   flex-shrink: 0;
 }
 .icon-button {
@@ -50,11 +42,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 32px;
-  min-width: 28px;
-  border-radius: 6px;
-  padding: 5px;
   line-height: 1;
   font-size: 21px;
   touch-action: manipulation;
@@ -71,9 +58,6 @@
   background: #fff0ee;
   color: #a23d30;
 }
-.widget-body {
-  padding: 22px;
-}
 .is-minimized .widget-header {
   border-bottom: 0;
 }
@@ -85,10 +69,8 @@
 .task-progress {
   appearance: none;
   display: block;
-  height: 5px;
   width: 100%;
   border: 0;
-  border-radius: 5px;
   overflow: hidden;
   background: #dce8d1;
   margin: 0 0 22px;
@@ -98,14 +80,12 @@
 }
 .task-progress::-webkit-progress-value {
   background: var(--accent);
-  border-radius: 5px;
 }
 .task-progress::-moz-progress-bar {
   background: var(--accent);
 }
 .task-filters {
   display: flex;
-  gap: 8px;
   margin-bottom: 18px;
 }
 .filter-button {
@@ -113,16 +93,11 @@
   border: 0;
   background: transparent;
   color: var(--muted);
-  padding: 9px 13px;
-  border-radius: 8px;
-  min-height: 38px;
 }
 .filter-button:hover {
   background: #e6eedd;
 }
 .filter-button.is-active {
-  color: #294a33;
-  background: var(--accent-soft);
   font-weight: 500;
 }
 .task-form {
@@ -131,8 +106,6 @@
 }
 .task-form input {
   flex: 1;
-  background: #f5f8ee;
-  border-color: #b7c5b2;
   font-size: 14px;
 }
 .task-add {
@@ -183,7 +156,6 @@
   appearance: none;
   padding: 0;
   border: 1.5px solid #84967d;
-  border-radius: 6px;
   width: 20px;
   height: 20px;
   min-height: 20px;
@@ -280,8 +252,6 @@
 }
 .refresh-button {
   font-size: 12px;
-  padding: 7px 11px;
-  min-height: 36px;
 }
 .refresh-button svg {
   width: 15px;
@@ -290,8 +260,6 @@
 .city-select {
   width: 100%;
   font-size: 13px;
-  border-color: #b7c5b2;
-  background: #f5f8ee;
 }
 .weather-hero {
   display: flex;
@@ -300,21 +268,14 @@
   margin-top: 24px;
 }
 .temperature {
-  font-size: 55px;
-  letter-spacing: -3px;
   line-height: 1.1;
-  font-weight: 500;
 }
 .temperature-unit {
   font-size: 25px;
-  color: var(--muted);
   letter-spacing: 0;
   margin-left: 3px;
 }
 .weather-hero > svg {
-  width: 45px;
-  height: 45px;
-  color: #bb7a21;
   stroke-width: 1.2;
 }
 .weather-description {
@@ -329,7 +290,6 @@
 .weather-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
   margin: 22px 0 12px;
 }
 .weather-metrics dt {
@@ -342,7 +302,6 @@
   font-weight: 500;
 }
 .weather-chart {
-  color: var(--accent);
   display: block;
   width: 100%;
   height: 65px;
@@ -381,7 +340,6 @@
   border: 0;
 }
 .rate-row dt strong {
-  font-size: 13px;
   display: block;
 }
 .rate-row dt span {
@@ -395,8 +353,6 @@
 }
 .rate-row dd strong {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -413,9 +369,6 @@
   color: #267052;
 }
 .converter {
-  background: #ece7f5;
-  border-radius: 10px;
-  padding: 12px;
   margin-top: 14px;
 }
 .converter label {
@@ -448,24 +401,17 @@
 }
 .conversion-output {
   display: block;
-  font-size: 19px;
-  font-weight: 500;
   margin-top: 10px;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 .widget-quote {
-  background: #eedccd;
   border-color: #eedccd;
 }
 .widget-quote .widget-header {
   border-color: #dfc8b6;
 }
 .quote-text {
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -0.4px;
   margin: 0;
   max-width: 700px;
 }
@@ -480,97 +426,28 @@
   font-size: 12px;
 }
 .quote-footer .button {
-  background: white;
-  color: #664b3b;
   flex-shrink: 0;
 }
-.quote-footer .button:hover {
-  background: #e5cbb6;
-}
 @media (max-width: 1350px) {
-  .widget-body {
-    padding: 22px;
-  }
   .widget-weather,
   .widget-currency {
     grid-column: span 1;
   }
-  .widget-header {
-    padding: 18px;
-  }
   .widget-quote {
     grid-column: span 2;
   }
-  .weather-hero > svg {
-    width: 54px;
-    height: 54px;
-  }
 }
 @media (max-width: 950px) {
-  .widget-header {
-    flex-wrap: wrap;
-    row-gap: 8px;
-    padding: 14px;
-  }
-  .widget-body {
-    padding: 18px;
-  }
-  .widget-title h2 {
-    font-size: 13px;
-  }
-  .widget-actions {
-    margin-left: auto;
-  }
-  .quote-text {
-    font-size: 22px;
-  }
   .quote-footer {
     flex-wrap: wrap;
   }
   .api-footer {
     gap: 9px;
   }
-  .temperature {
-    font-size: 46px;
-  }
-  .weather-hero > svg {
-    width: 34px;
-    height: 34px;
-  }
 }
 @media (max-width: 700px) {
-  .widget-header {
-    padding: 16px 18px;
-    flex-wrap: nowrap;
-  }
-  .widget-body {
-    padding: 20px;
-  }
-  .widget-title h2 {
-    font-size: 14px;
-  }
-  .widget-actions .icon-button {
-    width: 32px;
-    height: 36px;
-  }
-  .quote-text {
-    font-size: 23px;
-  }
-  .weather-hero > svg {
-    width: 58px;
-    height: 58px;
-  }
-  .temperature {
-    font-size: 62px;
-  }
-  .rate-row dt strong {
-    font-size: 14px;
-  }
   .rate-row dt span {
     font-size: 12px;
-  }
-  .rate-row dd strong {
-    font-size: 17px;
   }
   .rate-change {
     font-size: 12px;
@@ -595,8 +472,6 @@
     font-size: 14px;
   }
 }
-
-/* Tonal widget families echo Pixel's home screen widgets. */
 .widget {
   border: 0;
   border-radius: 32px;

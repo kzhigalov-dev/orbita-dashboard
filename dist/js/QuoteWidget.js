@@ -16,7 +16,7 @@ export default class QuoteWidget extends UIComponent {
       config.index >= 0 &&
       config.index < quotes.length
         ? config.index
-        : 0;
+        : Math.floor(Math.random() * quotes.length);
   }
   render() {
     const root = super.render();

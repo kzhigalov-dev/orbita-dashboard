@@ -1,3 +1,4 @@
+/* Page layout and Material You theme. */
 :root {
   --bg: #f5f7ef;
   --surface: #fff;
@@ -51,9 +52,7 @@ select {
   min-width: 0;
   max-width: 100%;
   color: var(--ink);
-  background: #fff;
   border: 1px solid #aab8cc;
-  border-radius: 9px;
   padding: 10px 12px;
   min-height: 44px;
 }
@@ -102,16 +101,12 @@ button:focus-visible {
 }
 .app-shell {
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
   min-height: 100vh;
 }
 .sidebar {
-  background: #fff;
   border-right: 1px solid var(--line);
-  padding: 36px 22px 20px;
   display: flex;
   flex-direction: column;
-  gap: 36px;
 }
 .brand {
   display: flex;
@@ -119,17 +114,11 @@ button:focus-visible {
   align-items: center;
   color: var(--ink);
   font-size: 29px;
-  font-weight: 800;
   text-decoration: none;
-  letter-spacing: -1.1px;
 }
 .brand-mark {
   display: grid;
   place-items: center;
-  background: var(--accent);
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
   color: #fff;
   font-size: 37px;
   line-height: 1;
@@ -148,11 +137,9 @@ button:focus-visible {
 }
 .brand-caption {
   display: block;
-  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0;
   color: var(--muted);
-  margin-top: -3px;
 }
 .sidebar-label {
   font-size: 13px;
@@ -164,8 +151,6 @@ button:focus-visible {
   gap: 12px;
   align-items: center;
   padding: 13px 14px;
-  border-radius: 10px;
-  background: var(--accent-soft);
   color: #294a33;
   font-size: 14px;
   font-weight: 600;
@@ -177,8 +162,6 @@ button:focus-visible {
 .space-count {
   margin-left: auto;
   font-size: 12px;
-  background: #c5ddb2;
-  border-radius: 6px;
   padding: 2px 7px;
 }
 .catalog h2 {
@@ -199,17 +182,10 @@ button:focus-visible {
   align-items: center;
   gap: 11px;
   text-align: left;
-  border: 1px solid transparent;
   background: none;
-  border-radius: 10px;
-  padding: 12px 8px;
   color: var(--ink);
   width: 100%;
   transition: background 0.15s;
-}
-.catalog-button:hover {
-  background: var(--accent-soft);
-  border-color: #c5ddb2;
 }
 .catalog-button strong {
   display: block;
@@ -224,7 +200,6 @@ button:focus-visible {
 }
 .catalog-icon {
   display: flex;
-  color: #48634d;
 }
 .catalog-plus {
   margin-left: auto;
@@ -233,12 +208,10 @@ button:focus-visible {
 }
 .sidebar-note {
   margin-top: auto;
-  padding: 20px 14px;
   border-top: 1px solid var(--line);
 }
 .sidebar-note p {
   font-size: 14px;
-  line-height: 1.8;
   margin: 16px 0 8px;
 }
 .sidebar-note strong {
@@ -271,7 +244,6 @@ button:focus-visible {
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 12px;
   color: var(--muted);
   padding: 0 10px;
 }
@@ -286,12 +258,10 @@ button:focus-visible {
 }
 main {
   min-width: 0;
-  padding: 0 38px 24px;
   max-width: 1900px;
   width: 100%;
 }
 .topbar {
-  height: 85px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -315,20 +285,11 @@ main {
 .workspace-heading {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  padding: 40px 0 34px;
 }
 .welcome {
-  font-size: 13px;
-  color: var(--muted);
   margin: 0 0 9px;
 }
 h1 {
-  font-size: clamp(30px, 3vw, 44px);
-  letter-spacing: -1.6px;
-  line-height: 1.15;
-  font-weight: 600;
   margin: 0 0 13px;
 }
 h1 > span {
@@ -340,12 +301,10 @@ h1 > span {
   margin: 0;
 }
 .save-status {
-  font-size: 12px;
   color: var(--muted);
   display: flex;
   align-items: center;
   gap: 7px;
-  white-space: nowrap;
   margin-bottom: 4px;
 }
 .save-dot {
@@ -367,8 +326,6 @@ h1 > span {
   justify-content: space-between;
   gap: 16px;
   color: var(--muted);
-  font-size: 12px;
-  margin-bottom: 15px;
 }
 .workspace-meta > span:first-child {
   color: #48634d;
@@ -385,7 +342,6 @@ h1 > span {
   justify-content: space-between;
   gap: 24px;
   margin-top: 30px;
-  padding-top: 20px;
   border-top: 1px solid var(--line);
   font-size: 12px;
   color: var(--muted);
@@ -398,10 +354,7 @@ h1 > span {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 10px 15px;
   border: 1px solid transparent;
-  border-radius: 9px;
   font-size: 13px;
   font-weight: 500;
   touch-action: manipulation;
@@ -417,11 +370,7 @@ h1 > span {
   background: #294a33;
 }
 .button-secondary {
-  background: #e2ebda;
   color: #294a33;
-}
-.button-secondary:hover {
-  background: #d2e2c6;
 }
 .muted {
   color: var(--muted);
@@ -429,10 +378,7 @@ h1 > span {
 }
 .dashboard-empty {
   text-align: center;
-  background: white;
-  border: 1px dashed #aab8cc;
   padding: 70px 24px;
-  border-radius: var(--radius);
 }
 .dashboard-empty h2 {
   font-size: 26px;
@@ -450,12 +396,10 @@ h1 > span {
   transform: translateX(-50%);
   background: var(--ink);
   color: #fff;
-  border-radius: 10px;
   padding: 12px 20px;
   max-width: calc(100% - 32px);
   z-index: 10;
   font-size: 14px;
-  box-shadow: 0 8px 26px #26352b24;
 }
 .toast:empty {
   display: none;
@@ -470,73 +414,27 @@ h1 > span {
   margin: 0;
 }
 @media (min-width: 1600px) {
-  main {
-    padding: 0 52px 30px;
-  }
   .dashboard-grid {
     gap: 24px;
   }
 }
 @media (max-width: 1350px) {
-  .app-shell {
-    grid-template-columns: 235px minmax(0, 1fr);
-  }
-  main {
-    padding: 0 26px 24px;
-  }
-  .sidebar {
-    padding: 30px 16px 18px;
-  }
   .dashboard-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .workspace-heading {
-    align-items: flex-start;
-  }
-  .save-status {
-    margin-top: 12px;
   }
   .widget-todo {
     grid-column: span 2;
   }
 }
 @media (max-width: 950px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .app-shell {
-    grid-template-columns: 200px minmax(0, 1fr);
-  }
   .catalog-button small {
     display: none;
-  }
-  .sidebar {
-    padding: 26px 14px;
-    gap: 28px;
   }
   .brand {
     font-size: 26px;
   }
-  .brand-mark {
-    width: 38px;
-    height: 38px;
-  }
-  .workspace-heading {
-    display: block;
-    padding: 30px 0;
-  }
-  .save-status {
-    margin-top: 18px;
-  }
-  .today {
-    font-size: 12px;
-  }
   .breadcrumb {
     gap: 6px;
-    font-size: 12px;
-  }
-  .sidebar-note {
-    padding: 18px 4px;
   }
   .sidebar-bottom {
     flex-wrap: wrap;
@@ -551,17 +449,9 @@ h1 > span {
   }
 }
 @media (max-width: 700px) {
-  .app-shell {
-    display: block;
-  }
   .sidebar {
-    padding: 20px;
-    gap: 20px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
-  }
-  .brand {
-    font-size: 27px;
   }
   .sidebar-section,
   .sidebar-note,
@@ -569,79 +459,29 @@ h1 > span {
   .catalog-description {
     display: none;
   }
-  .catalog h2 {
-    margin: 0 0 12px;
-    font-size: 14px;
-  }
   .catalog-items {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-  .catalog-button {
-    border: 1px solid var(--line);
-    padding: 10px 12px;
-    min-height: 46px;
-  }
-  .catalog-button strong {
-    font-size: 13px;
   }
   .catalog-button small {
     display: none;
   }
-  .catalog-icon svg {
-    width: 17px;
-    height: 17px;
-  }
-  .catalog-plus {
-    font-size: 20px;
-  }
   .catalog {
     margin-top: 0;
   }
-  main {
-    padding: 0 20px 24px;
-  }
-  .topbar {
-    height: 60px;
-  }
-  .breadcrumb {
-    font-size: 12px;
-  }
-  .today {
-    font-size: 11px;
-  }
-  .workspace-heading {
-    padding: 28px 0 26px;
-  }
-  .welcome {
-    font-size: 12px;
-  }
-  .intro {
-    font-size: 13px;
-  }
   .dashboard-grid {
-    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
   }
   .dashboard-grid > .widget {
     grid-column: auto;
   }
-  .workspace-meta > span:last-child {
-    font-size: 11px;
-  }
   .workspace-footer {
-    display: block;
     font-size: 12px;
   }
   .workspace-footer a {
     display: inline-block;
-    margin-top: 12px;
   }
   .toast {
     bottom: 16px;
-  }
-  h1 {
-    letter-spacing: -1px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -653,8 +493,6 @@ h1 > span {
     scroll-behavior: auto !important;
   }
 }
-
-/* Pixel-inspired Material You: tonal surfaces, expressive shapes, quiet depth. */
 .app-shell {
   grid-template-columns: 248px minmax(0, 1fr);
   padding: 16px;
@@ -1007,7 +845,6 @@ select {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-
 @media (max-width: 700px) {
   .workspace-footer {
     display: flex;
@@ -1018,7 +855,6 @@ select {
     margin-top: 0;
   }
 }
-
 .skip-link:hover {
   color: #fff;
 }
