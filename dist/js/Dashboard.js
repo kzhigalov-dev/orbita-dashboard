@@ -7,6 +7,7 @@ import FocusWidget from "./FocusWidget.js";
 import HabitsWidget from "./HabitsWidget.js";
 import ClockWidget from "./ClockWidget.js";
 import CalculatorWidget from "./CalculatorWidget.js";
+import WidgetLayout from "./WidgetLayout.js";
 const registry = {
   todo: ToDoWidget,
   weather: WeatherWidget,
@@ -24,6 +25,7 @@ export default class Dashboard {
     Object.assign(this, { container, announce, onSave, onUpdate, addButtons });
     this.widgets = [];
     this.restoring = false;
+    this.layout = new WidgetLayout(container);
   }
   addWidget(widgetType, config = {}, { focus = true } = {}) {
     if (!Object.hasOwn(registry, widgetType))
@@ -39,12 +41,16 @@ export default class Dashboard {
       type: widgetType,
       onClose: (id) => this.removeWidget(id),
       onMove: (id, delta) => this.moveWidget(id, delta),
-      onChange: () => this.save(),
+      onChange: () => {
+        this.layout.schedule();
+        this.save();
+      },
       onDuplicate: (id) => this.duplicateWidget(id),
       announce: this.announce,
     });
     this.widgets.push(widget);
     this.container.append(widget.render());
+    this.layout.add(widget.root);
     this.update();
     this.save();
     widget.load?.();
@@ -76,6 +82,7 @@ export default class Dashboard {
     const index = this.widgets.findIndex((w) => w.id === widgetId);
     if (index < 0) return;
     const [widget] = this.widgets.splice(index, 1);
+    this.layout.remove(widget.root);
     widget.destroy();
     this.update();
     this.save();
@@ -198,6 +205,7 @@ export default class Dashboard {
     this.update();
   }
   destroy() {
+    this.layout.destroy();
     this.widgets.forEach((w) => w.destroy());
     this.widgets = [];
   }

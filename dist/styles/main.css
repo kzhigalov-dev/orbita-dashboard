@@ -348,10 +348,16 @@ h1 > span {
   font-weight: 500;
 }
 .dashboard-grid {
+  --widget-gap: 20px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  gap: var(--widget-gap);
   align-items: start;
+}
+.dashboard-grid.is-packed {
+  grid-auto-rows: 4px;
+  grid-auto-flow: row dense;
+  row-gap: 0;
 }
 .workspace-footer {
   display: flex;
@@ -431,7 +437,7 @@ h1 > span {
 }
 @media (min-width: 1600px) {
   .dashboard-grid {
-    gap: 24px;
+    --widget-gap: 24px;
   }
 }
 @media (max-width: 1350px) {
@@ -485,7 +491,7 @@ h1 > span {
     margin-top: 0;
   }
   .dashboard-grid {
-    gap: 16px;
+    --widget-gap: 16px;
   }
   .dashboard-grid > .widget {
     grid-column: auto;
