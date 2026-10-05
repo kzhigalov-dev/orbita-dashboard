@@ -128,11 +128,16 @@
   display: none;
 }
 .task-list {
-  padding: 0;
-  margin: 18px 0 0;
+  /* Keep focus outlines clear of the viewport edge and overlay scrollbar. */
+  padding: 6px 12px;
+  margin: 12px -12px -6px;
   list-style: none;
   max-height: 450px;
   overflow: auto;
+  scroll-padding: 6px;
+}
+.task-list :is(input, button) {
+  scroll-margin-block: 6px;
 }
 .task-row {
   display: flex;

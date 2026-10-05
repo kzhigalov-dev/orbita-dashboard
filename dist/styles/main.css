@@ -77,8 +77,8 @@ select:focus {
   border-color: var(--accent);
 }
 :focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 button:focus-visible {
   position: relative;
