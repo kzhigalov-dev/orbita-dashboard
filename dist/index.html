@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f7ef" />
+    <meta
+      name="description"
+      content="Орбита — ваш рабочий день в одном месте. Независимые виджеты задач, погоды, курсов валют и мыслей на день."
+    />
+    <title>Орбита — мой рабочий день</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/components.css" />
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">К рабочему столу</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Каталог виджетов">
+        <a class="brand" href="./" aria-label="Орбита — главная"
+          ><span class="brand-mark" aria-hidden="true">о</span
+          ><span
+            >орбита<span class="brand-caption">Рабочий центр</span></span
+          ></a
+        >
+        <div class="sidebar-section">
+          <p class="sidebar-label">Моё пространство</p>
+          <div class="current-space">
+            <span class="space-icon" aria-hidden="true"
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              >
+                <rect x="3" y="3" width="7" height="7" rx="2" />
+                <rect x="14" y="3" width="7" height="7" rx="2" />
+                <rect x="3" y="14" width="7" height="7" rx="2" />
+                <rect x="14" y="14" width="7" height="7" rx="2" /></svg></span
+            ><span>Рабочий стол</span
+            ><span class="space-count" id="widget-count">4</span>
+          </div>
+        </div>
+        <div class="catalog">
+          <h2>Добавить виджет</h2>
+          <p class="catalog-description">Соберите свой рабочий день.</p>
+          <div class="catalog-items">
+            <button class="catalog-button" data-add="todo" type="button">
+              <span class="catalog-icon" data-icon="tasks"></span
+              ><span
+                ><strong>Задачи</strong
+                ><small>Планы и маленькие победы</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="weather" type="button">
+              <span class="catalog-icon" data-icon="weather"></span
+              ><span
+                ><strong>Погода</strong
+                ><small>Сейчас и на ближайшие часы</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="currency" type="button">
+              <span class="catalog-icon" data-icon="currency"></span
+              ><span
+                ><strong>Валюты</strong
+                ><small>Курсы и пересчёт суммы</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="quote" type="button">
+              <span class="catalog-icon" data-icon="quote"></span
+              ><span
+                ><strong>Мысль на день</strong
+                ><small>Небольшая смена перспективы</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+          </div>
+        </div>
+        <div class="sidebar-note">
+          <span class="note-orbit" aria-hidden="true"></span>
+          <p>
+            Меньше переключений.<br /><strong>Больше внимания важному.</strong>
+          </p>
+          <span>Всё нужное — на вашей орбите.</span>
+        </div>
+        <div class="sidebar-bottom">
+          <span class="device-dot" aria-hidden="true"></span
+          ><span>Личное пространство</span><span class="version">v1.0</span>
+        </div>
+      </aside>
+      <main id="workspace" tabindex="-1">
+        <header class="topbar">
+          <div class="breadcrumb">
+            Моё пространство <span aria-hidden="true">/</span>
+            <strong>Рабочий стол</strong>
+          </div>
+          <span class="today" id="today"></span>
+        </header>
+        <section class="workspace-heading" aria-labelledby="page-title">
+          <div class="clock-block">
+            <time
+              class="desk-clock"
+              id="desk-clock"
+              aria-label="Текущее время"
+            ></time>
+            <p class="clock-caption">Время для важного</p>
+          </div>
+          <div class="heading-copy">
+            <p class="welcome">Добро пожаловать домой</p>
+            <h1 id="page-title">Мой рабочий день</h1>
+            <p class="intro">Важное рядом. Остальное может подождать.</p>
+            <div class="save-status" id="save-status" role="status">
+              <span class="save-dot" aria-hidden="true"></span
+              ><span id="save-text">Сохранено в этом браузере</span>
+            </div>
+          </div>
+        </section>
+        <div class="workspace-meta">
+          <span id="workspace-count">4 виджета</span
+          ><span>Меняйте порядок кнопками в заголовке</span>
+        </div>
+        <div class="dashboard-grid" id="dashboard"></div>
+        <div class="dashboard-empty" id="dashboard-empty" hidden>
+          <h2>Чистый лист</h2>
+          <p>Добавьте первый виджет из каталога — и начните свой день.</p>
+          <button class="button button-primary" id="first-widget" type="button">
+            Добавить задачи
+          </button>
+        </div>
+        <footer class="workspace-footer">
+          <span>Ваши задачи остаются в этом браузере.</span
+          ><a
+            href="https://github.com/kzhigalov-dev/orbita-dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+            id="source-link"
+            >Исходный код и инструкция</a
+          >
+        </footer>
+      </main>
+    </div>
+    <div
+      class="toast"
+      id="toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+    <noscript
+      ><p class="noscript-message">
+        Для работы виджетов включите JavaScript в настройках браузера.
+      </p></noscript
+    >
+  </body>
+</html>
