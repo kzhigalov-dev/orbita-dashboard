@@ -58,7 +58,10 @@ export default class WeatherWidget extends APIWidget {
     const hero = el("div", "weather-hero");
     const value = el("div", "temperature", `${format(data.temperature)}°`);
     value.append(el("span", "temperature-unit", "C"));
-    hero.append(value, icon("weather"));
+    const conditionIcon = data.code <= 1 ? "weather" : data.code >= 95 ? "thunder" :
+      data.code >= 71 && data.code <= 77 ? "snow" :
+      data.code >= 51 && data.code <= 86 ? "rain" : "cloud";
+    hero.append(value, icon(conditionIcon));
     const detail = el(
       "p",
       "weather-description",
@@ -101,6 +104,7 @@ export default class WeatherWidget extends APIWidget {
       poly.setAttribute("fill", "none");
       poly.setAttribute("stroke", "currentColor");
       poly.setAttribute("stroke-width", "3");
+      poly.setAttribute("pathLength", "1");
       svg.append(poly);
       const hours = el("div", "chart-labels");
       hours.append(

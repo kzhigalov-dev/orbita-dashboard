@@ -25,9 +25,15 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Каталог виджетов">
         <a class="brand" href="./" aria-label="Орбита — главная"
-          ><span class="brand-mark" aria-hidden="true">о</span
-          ><span
-            >орбита<span class="brand-caption">Рабочий центр</span></span
+          ><span class="brand-mark" aria-hidden="true"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="22" fill="#385c42"/>
+  <g class="logo-orbit">
+    <ellipse cx="32" cy="32" rx="26" ry="12" transform="rotate(-35 32 32)" stroke="#c5dcb0" stroke-width="2.5"/>
+    <circle cx="52" cy="17" r="5" fill="#ebbd68" stroke="#385c42" stroke-width="2.5"/>
+  </g>
+  <circle cx="32" cy="32" r="13" fill="#385c42" stroke="#f5f7ef" stroke-width="5"/>
+</svg></span><span
+            >Орбита<span class="brand-caption">Ваш день в одной орбите</span></span
           ></a
         >
         <div class="sidebar-section">
@@ -114,7 +120,6 @@
             <p class="clock-caption">Время для важного</p>
           </div>
           <div class="heading-copy">
-            <p class="welcome">Добро пожаловать домой</p>
             <h1 id="page-title">Мой рабочий день</h1>
             <p class="intro">Важное рядом. Остальное может подождать.</p>
             <div class="save-status" id="save-status" role="status">
@@ -122,6 +127,20 @@
               ><span id="save-text">Сохранено в этом браузере</span>
             </div>
           </div>
+          <section class="day-summary" aria-labelledby="day-summary-title">
+            <div class="day-ring" aria-hidden="true">
+              <svg viewBox="0 0 100 100" fill="none">
+                <circle class="day-ring-track" cx="50" cy="50" r="42" />
+                <circle class="day-ring-value" id="day-ring-value" cx="50" cy="50" r="42" pathLength="100" />
+              </svg>
+              <span id="day-percent">0%</span>
+            </div>
+            <div class="day-summary-copy">
+              <h2 id="day-summary-title">Ритм дня</h2>
+              <p class="day-done" id="day-done">0 из 3 готово</p>
+              <p class="day-remaining" id="day-remaining">3 задачи в работе</p>
+            </div>
+          </section>
         </section>
         <div class="workspace-meta">
           <span id="workspace-count">4 виджета</span

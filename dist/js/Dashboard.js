@@ -38,6 +38,10 @@ export default class Dashboard {
     this.save();
     widget.load?.();
     if (focus) {
+      widget.animate(widget.root, [
+        { transform: "scale(0.94)", opacity: 0.6 },
+        { transform: "scale(1)", opacity: 1 },
+      ], { duration: 360 });
       widget.toggleButton.focus();
       this.announce(`Добавлен виджет «${widget.title}».`);
     }
@@ -59,11 +63,23 @@ export default class Dashboard {
     const target = index + delta;
     if (index < 0 || target < 0 || target >= this.widgets.length) return;
     const focused = document.activeElement;
+    const positions = new Map(this.widgets.map((w) => [w.id, w.root.getBoundingClientRect()]));
+    this.widgets.forEach((w) => w.stopAnimation(w.root));
     const [widget] = this.widgets.splice(index, 1);
     this.widgets.splice(target, 0, widget);
     this.widgets.forEach((w) => this.container.append(w.root));
     this.update();
     this.save();
+    this.widgets.forEach((w) => {
+      const before = positions.get(w.id);
+      const after = w.root.getBoundingClientRect();
+      const x = before.left - after.left;
+      const y = before.top - after.top;
+      if (x || y) w.animate(w.root, [
+        { transform: `translate(${x}px, ${y}px)` },
+        { transform: "translate(0, 0)" },
+      ], { duration: 360 });
+    });
     const fallback = delta < 0 ? widget.downButton : widget.upButton;
     (focused?.isConnected && !focused.disabled ? focused : fallback).focus();
     this.announce(

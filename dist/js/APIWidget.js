@@ -41,8 +41,14 @@ export default class APIWidget extends UIComponent {
     this.resultNode.setAttribute("aria-busy", String(status === "loading"));
     this.statusNode.replaceChildren();
     this.root?.classList.toggle("has-error", status === "error");
+    this.root?.classList.toggle("is-loading", status === "loading");
+    this.refreshButton?.setAttribute("aria-busy", String(status === "loading"));
     if (status === "success") {
       this.renderData(data);
+      this.animate(this.resultNode, [
+        { opacity: 0.55, transform: "translateY(5px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ]);
       return;
     }
     const labels = {

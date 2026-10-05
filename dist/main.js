@@ -1,3 +1,4 @@
+import { summarizeTasks } from "./js/day-summary.js";
 import Dashboard from "./js/Dashboard.js";
 import { icon } from "./js/dom.js";
 document
@@ -48,6 +49,14 @@ const dashboard = new Dashboard({
     document.querySelector("#workspace-count").textContent =
       `${count} ${{ one: "виджет", few: "виджета", many: "виджетов", other: "виджета" }[label]}`;
     document.querySelector("#dashboard-empty").hidden = count > 0;
+    const summary = summarizeTasks(widgets);
+    document.querySelector("#day-percent").textContent = summary.total ? `${summary.percent}%` : "—";
+    document.querySelector("#day-ring-value").style.strokeDashoffset = 100 - summary.percent;
+    document.querySelector(".day-summary").classList.toggle("all-done", summary.total > 0 && summary.remaining === 0);
+    document.querySelector("#day-done").textContent = summary.total ? `${summary.done} из ${summary.total} готово` : "Пока нет задач";
+    const taskWord = { one: "задача", few: "задачи", many: "задач", other: "задачи" }[new Intl.PluralRules("ru-RU").select(summary.remaining)];
+    document.querySelector("#day-remaining").textContent = !summary.total ? "Добавьте список из каталога" :
+      summary.remaining ? `${summary.remaining} ${taskWord} в работе` : "Всё сделано. Можно выдохнуть.";
   },
 });
 const events = new AbortController();

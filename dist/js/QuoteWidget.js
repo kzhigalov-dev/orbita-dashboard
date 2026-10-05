@@ -30,6 +30,10 @@ export default class QuoteWidget extends UIComponent {
         (this.index + 1 + Math.floor(Math.random() * (quotes.length - 1))) %
         quotes.length;
       this.quote.textContent = quotes[this.index];
+      this.animate(this.quote, [
+        { opacity: 0.35, clipPath: "inset(0 8% 0 0)" },
+        { opacity: 1, clipPath: "inset(0 0 0 0)" },
+      ], { duration: 320 });
       this.changed();
     });
     footer.append(el("span", "muted", "Редакция «Орбиты»"), refresh);

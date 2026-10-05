@@ -1,6 +1,7 @@
 import { el, button, icon } from "./dom.js";
 export default class UIComponent {
   #listeners = [];
+  #animations = new Map();
   constructor({
     id = crypto.randomUUID(),
     title,
@@ -29,6 +30,25 @@ export default class UIComponent {
     this.#listeners.push(() =>
       target.removeEventListener(event, handler, options),
     );
+  }
+  animate(node, keyframes, options = {}) {
+    if (this.destroyed || !node?.animate || globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    this.stopAnimation(node);
+    const animation = node.animate(keyframes, {
+      duration: 280,
+      easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+      ...options,
+    });
+    this.#animations.set(node, animation);
+    const cleanup = () => {
+      if (this.#animations.get(node) === animation) this.#animations.delete(node);
+    };
+    animation.onfinish = cleanup;
+    animation.oncancel = cleanup;
+  }
+  stopAnimation(node) {
+    this.#animations.get(node)?.cancel();
+    this.#animations.delete(node);
   }
   render() {
     if (this.root) return this.root;
@@ -87,6 +107,10 @@ export default class UIComponent {
   minimize() {
     this.minimized = !this.minimized;
     this.syncMinimize();
+    if (!this.minimized) this.animate(this.body, [
+      { opacity: 0.5, transform: "translateY(-8px)" },
+      { opacity: 1, transform: "translateY(0)" },
+    ]);
     this.changed();
   }
   changed() {
@@ -98,6 +122,8 @@ export default class UIComponent {
   destroy() {
     if (this.destroyed) return;
     this.destroyed = true;
+    this.#animations.forEach((animation) => animation.cancel());
+    this.#animations.clear();
     this.#listeners.splice(0).forEach((remove) => remove());
     this.root?.remove();
   }

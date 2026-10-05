@@ -84,6 +84,7 @@ export default class ToDoWidget extends UIComponent {
       this.paint();
       this.changed();
       this.announce("Задача добавлена.");
+      this.animateTask(this.tasks.at(-1).id);
     });
     this.listen(this.list, "change", (event) => {
       const id = event.target.dataset.task;
@@ -94,6 +95,7 @@ export default class ToDoWidget extends UIComponent {
       this.paint();
       this.changed();
       this.focusTask(index);
+      this.animateTask(id);
       this.announce(
         task.done ? "Задача выполнена." : "Задача возвращена в работу.",
       );
@@ -123,6 +125,13 @@ export default class ToDoWidget extends UIComponent {
   focusTask(index) {
     const checks = this.list.querySelectorAll("input");
     (checks[Math.min(index, checks.length - 1)] ?? this.input).focus();
+  }
+  animateTask(id) {
+    const check = [...this.list.querySelectorAll("input")].find((node) => node.dataset.task === id);
+    if (check) this.animate(check.closest(".task-row"), [
+      { backgroundColor: "#dcebcf", transform: "translateX(4px)" },
+      { backgroundColor: "transparent", transform: "translateX(0)" },
+    ], { duration: 420 });
   }
   paint() {
     const done = this.tasks.filter((t) => t.done).length;
