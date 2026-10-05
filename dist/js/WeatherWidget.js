@@ -1,6 +1,7 @@
 import APIWidget from "./APIWidget.js";
 import { el, sourceLink, format, icon } from "./dom.js";
 import { cities, parseWeather, weatherDescription } from "./data.js";
+import SelectControl from "./SelectControl.js";
 export default class WeatherWidget extends APIWidget {
   constructor(config = {}) {
     super({ ...config, title: "Погода", type: "weather" });
@@ -10,18 +11,17 @@ export default class WeatherWidget extends APIWidget {
     const root = super.render();
     const label = el("label", "sr-only", "Город");
     label.htmlFor = `${this.id}-city`;
-    this.select = el("select", "city-select");
-    this.select.id = label.htmlFor;
-    Object.entries(cities).forEach(([value, city]) => {
-      const option = el("option", "", city.name);
-      option.value = value;
-      this.select.append(option);
-    });
-    this.select.value = this.city;
-    this.listen(this.select, "change", () => {
-      this.city = this.select.value;
-      this.changed();
-      this.load();
+    this.select = new SelectControl({
+      id: label.htmlFor,
+      label: "Город",
+      className: "city-select",
+      options: Object.entries(cities).map(([value, city]) => ({ value, label: city.name })),
+      value: this.city,
+      onChange: (value) => {
+        this.city = value;
+        this.changed();
+        this.load();
+      },
     });
     const footer = el("footer", "api-footer");
     footer.append(
@@ -30,7 +30,7 @@ export default class WeatherWidget extends APIWidget {
     );
     this.body.append(
       label,
-      this.select,
+      this.select.root,
       this.statusNode,
       this.resultNode,
       footer,
@@ -120,5 +120,9 @@ export default class WeatherWidget extends APIWidget {
   }
   serialize() {
     return { ...super.serialize(), city: this.city };
+  }
+  destroy() {
+    this.select?.destroy();
+    super.destroy();
   }
 }

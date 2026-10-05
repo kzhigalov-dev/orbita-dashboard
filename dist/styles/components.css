@@ -388,12 +388,9 @@
   font-size: 13px;
   min-height: 38px;
 }
-.converter-line select {
-  padding: 6px;
-  font-size: 12px;
-  min-height: 38px;
+.currency-select {
   flex-shrink: 0;
-  width: 72px;
+  width: 96px;
 }
 .converter-divider {
   font-size: 12px;
@@ -574,7 +571,7 @@
 .task-row {
   border-color: #e6eadf;
 }
-.city-select {
+.city-select .select-trigger {
   border-color: #c4b47e;
   background: #fffaeb;
 }
@@ -633,7 +630,7 @@
   padding: 16px;
 }
 .converter input,
-.converter select {
+.converter .select-trigger {
   background: #fff;
   border-color: #c4b9d3;
   border-radius: 14px;
@@ -695,4 +692,57 @@
   .widget-currency .api-footer {
     flex-wrap: wrap;
   }
+}
+
+/* Shared listbox: fixed portal prevents clipping inside rounded widgets. */
+.select-control { min-width: 0; }
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #b7c5b2;
+  border-radius: 18px;
+  background: #f9fbf5;
+  color: inherit;
+  text-align: left;
+  font-size: 14px;
+}
+.select-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select-trigger svg { flex-shrink: 0; width: 18px; height: 18px; }
+.select-trigger[aria-expanded="true"] svg { transform: rotate(180deg); }
+.select-menu {
+  position: fixed;
+  z-index: 1000;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  border: 1px solid #b7c5b2;
+  border-radius: 20px;
+  background: #f8faf2;
+  color: #26352b;
+  box-shadow: 0 8px 24px #26352b26;
+}
+.select-menu[hidden] { display: none; }
+.select-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-size: 14px;
+}
+.select-option[aria-selected="true"] { font-weight: 600; }
+.select-option.is-active { background: #dce9d1; }
+@media (max-width: 700px) {
+  .converter-line input { font-size: 16px; min-height: 44px; }
+  .select-trigger, .select-option { font-size: 16px; }
 }

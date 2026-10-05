@@ -1,4 +1,5 @@
 import APIWidget from "./APIWidget.js";
+import SelectControl from "./SelectControl.js";
 import { el, sourceLink, format } from "./dom.js";
 import { currencies, parseRates } from "./data.js";
 // Rate limit shared by all currency widget instances: fewer than 30 requests/minute.
@@ -28,6 +29,7 @@ export default class CurrencyWidget extends APIWidget {
   }
   async load() {
     if (this.destroyed) return;
+    this.currencySelect?.close();
     this.cancelRequest();
     clearTimeout(this.#delay);
     this.#resolveDelay?.();
@@ -59,16 +61,14 @@ export default class CurrencyWidget extends APIWidget {
     }
   }
   renderData(data) {
-    this.resultNode.replaceChildren();
+    if (!this.converterForm) this.renderConverter();
     const date = new Intl.DateTimeFormat("ru-RU", {
       day: "numeric",
       month: "long",
       year: "numeric",
       timeZone: "Europe/Moscow",
     }).format(new Date(data.date));
-    this.resultNode.append(
-      el("p", "rate-date", `Официальные курсы на ${date}`),
-    );
+    const dateNode = el("p", "rate-date", `Официальные курсы на ${date}`);
     const list = el("dl", "rate-list");
     data.rates.forEach((rate) => {
       const row = el("div", "rate-row");
@@ -89,58 +89,48 @@ export default class CurrencyWidget extends APIWidget {
       row.append(name, value);
       list.append(row);
     });
-    const form = el("div", "converter");
+    this.ratesNode.replaceChildren(dateNode, list);
+    this.updateConverter();
+  }
+  renderConverter() {
+    this.ratesNode = el("div");
+    this.converterForm = el("div", "converter");
     const label = el("label", "", "Пересчитать рубли");
     label.htmlFor = `${this.id}-amount`;
     const line = el("div", "converter-line");
-    const input = el("input");
-    input.id = label.htmlFor;
-    input.type = "number";
-    input.min = "0";
-    input.max = "1000000000";
-    input.step = "any";
-    input.inputMode = "decimal";
-    input.value = this.amount;
-    input.name = "amount";
-    const select = el("select");
-    select.setAttribute("aria-label", "Валюта результата");
-    Object.keys(currencies).forEach((code) => {
-      const option = el("option", "", code);
-      option.value = code;
-      select.append(option);
+    this.amountInput = el("input");
+    Object.assign(this.amountInput, {
+      id: label.htmlFor, type: "number", min: "0", max: "1000000000",
+      step: "any", inputMode: "decimal", value: this.amount, name: "amount",
     });
-    select.value = this.currency;
-    const output = el("output", "conversion-output");
-    output.setAttribute("aria-live", "polite");
-    const update = () => {
-      this.amount = input.value;
-      this.currency = select.value;
-      const value = Number(input.value);
-      const rate = data.rates.find((r) => r.code === select.value)?.rate;
-      output.textContent =
-        input.value === ""
-          ? "Введите сумму в рублях"
-          : !input.validity.valid || !Number.isFinite(value)
-            ? "Введите сумму от 0 до 1 000 000 000 ₽"
-            : `${format(value / rate, 2)} ${select.value}`;
-    };
-    // Delegation avoids retaining handlers on replaced converter nodes after refresh.
-    line.append(input, el("span", "converter-divider", "в"), select);
-    form.append(label, line, output);
-    this.resultNode.append(list, form);
-    this.converterUpdate = update;
-    update();
-    if (!this.converterListening) {
-      this.listen(this.resultNode, "input", () => {
-        this.converterUpdate?.();
+    this.currencySelect = new SelectControl({
+      id: `${this.id}-currency`, label: "Валюта результата",
+      className: "currency-select", value: this.currency,
+      options: Object.keys(currencies).map((code) => ({ value: code, label: code })),
+      onChange: (value) => {
+        this.currency = value;
+        this.updateConverter();
         this.changed();
-      });
-      this.listen(this.resultNode, "change", () => {
-        this.converterUpdate?.();
-        this.changed();
-      });
-      this.converterListening = true;
-    }
+      },
+    });
+    this.conversionOutput = el("output", "conversion-output");
+    this.conversionOutput.setAttribute("aria-live", "polite");
+    this.listen(this.amountInput, "input", () => {
+      this.amount = this.amountInput.value;
+      this.updateConverter();
+      this.changed();
+    });
+    line.append(this.amountInput, el("span", "converter-divider", "в"), this.currencySelect.root);
+    this.converterForm.append(label, line, this.conversionOutput);
+    this.resultNode.append(this.ratesNode, this.converterForm);
+  }
+  updateConverter() {
+    const value = Number(this.amountInput.value);
+    const rate = this.data?.rates.find((r) => r.code === this.currency)?.rate;
+    this.conversionOutput.textContent =
+      this.amountInput.value === "" ? "Введите сумму в рублях" :
+      !this.amountInput.validity.valid || !Number.isFinite(value) ? "Введите сумму от 0 до 1 000 000 000 ₽" :
+      !rate ? "Курс пока недоступен" : `${format(value / rate, 2)} ${this.currency}`;
   }
   serialize() {
     return {
@@ -153,7 +143,7 @@ export default class CurrencyWidget extends APIWidget {
     this.#ticket++;
     clearTimeout(this.#delay);
     this.#resolveDelay?.();
-    this.converterUpdate = null;
+    this.currencySelect?.destroy();
     super.destroy();
   }
 }
