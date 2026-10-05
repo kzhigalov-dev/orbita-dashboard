@@ -1,13 +1,16 @@
 import APIWidget from "./APIWidget.js";
-import { el, sourceLink, format, icon } from "./dom.js";
+import { el, button, sourceLink, format, icon } from "./dom.js";
 import { cities, parseWeather, weatherDescription } from "./data.js";
 import SelectControl from "./SelectControl.js";
 export default class WeatherWidget extends APIWidget {
   constructor(config = {}) {
     super({ ...config, title: "Погода", type: "weather" });
+    this.unit = config.unit === "F" ? "F" : "C";
+    this.hours = [6, 12, 24].includes(config.hours) ? config.hours : 12;
     this.city = Object.hasOwn(cities, config.city) ? config.city : "spb";
   }
   render() {
+    if (this.root) return this.root;
     const root = super.render();
     const label = el("label", "sr-only", "Город");
     label.htmlFor = `${this.id}-city`;
@@ -15,7 +18,10 @@ export default class WeatherWidget extends APIWidget {
       id: label.htmlFor,
       label: "Город",
       className: "city-select",
-      options: Object.entries(cities).map(([value, city]) => ({ value, label: city.name })),
+      options: Object.entries(cities).map(([value, city]) => ({
+        value,
+        label: city.name,
+      })),
       value: this.city,
       onChange: (value) => {
         this.city = value;
@@ -23,6 +29,31 @@ export default class WeatherWidget extends APIWidget {
         this.load();
       },
     });
+    const options = el("div", "widget-toolbar weather-options");
+    this.unitButton = button(
+      "Температура в °F",
+      null,
+      "button button-secondary",
+    );
+    this.listen(this.unitButton, "click", () => {
+      this.unit = this.unit === "C" ? "F" : "C";
+      this.syncOptions();
+      if (this.data) this.renderData(this.data);
+      this.changed();
+    });
+    this.rangeButtons = [6, 12, 24].map((hours) => {
+      const b = button(`${hours} ч`, null, "button button-secondary");
+      this.listen(b, "click", () => {
+        this.hours = hours;
+        this.syncOptions();
+        if (this.data) this.renderData(this.data);
+        this.changed();
+      });
+      options.append(b);
+      return b;
+    });
+    options.append(this.unitButton);
+    this.syncOptions();
     const footer = el("footer", "api-footer");
     footer.append(
       sourceLink("https://open-meteo.com/", "Open-Meteo · CC BY 4.0"),
@@ -31,11 +62,23 @@ export default class WeatherWidget extends APIWidget {
     this.body.append(
       label,
       this.select.root,
+      options,
       this.statusNode,
       this.resultNode,
       footer,
     );
     return root;
+  }
+  syncOptions() {
+    this.rangeButtons.forEach((b, i) =>
+      b.setAttribute("aria-pressed", String([6, 12, 24][i] === this.hours)),
+    );
+    this.unitButton.textContent = `°${this.unit}`;
+    this.unitButton.setAttribute(
+      "aria-label",
+      this.unit === "C" ? "Температура в °F" : "Температура в °C",
+    );
+    this.unitButton.title = this.unitButton.getAttribute("aria-label");
   }
   load() {
     const city = cities[this.city];
@@ -55,19 +98,37 @@ export default class WeatherWidget extends APIWidget {
   }
   renderData(data) {
     this.resultNode.replaceChildren();
+    const temperature = (value) =>
+      this.unit === "F" ? (value * 9) / 5 + 32 : value;
+    const forecast = data.hours.slice(0, this.hours);
     const hero = el("div", "weather-hero");
-    const value = el("div", "temperature", `${format(data.temperature)}°`);
-    value.append(el("span", "temperature-unit", "C"));
-    const conditionIcon = data.code <= 1 ? "weather" : data.code >= 95 ? "thunder" :
-      data.code >= 71 && data.code <= 77 ? "snow" :
-      data.code >= 51 && data.code <= 86 ? "rain" : "cloud";
+    const value = el(
+      "div",
+      "temperature",
+      `${format(temperature(data.temperature))}°`,
+    );
+    value.append(el("span", "temperature-unit", this.unit));
+    const conditionIcon =
+      data.code <= 1
+        ? "weather"
+        : data.code >= 95
+          ? "thunder"
+          : data.code >= 71 && data.code <= 77
+            ? "snow"
+            : data.code >= 51 && data.code <= 86
+              ? "rain"
+              : "cloud";
     hero.append(value, icon(conditionIcon));
     const detail = el(
       "p",
       "weather-description",
       weatherDescription(data.code),
     );
-    const feels = el("p", "muted", `Ощущается как ${format(data.feels)}°`);
+    const feels = el(
+      "p",
+      "muted",
+      `Ощущается как ${format(temperature(data.feels))}°`,
+    );
     const metrics = el("dl", "weather-metrics");
     for (const [label, value] of [
       ["Ветер", `${format(data.wind, 1)} км/ч`],
@@ -78,8 +139,8 @@ export default class WeatherWidget extends APIWidget {
       metrics.append(group);
     }
     this.resultNode.append(hero, detail, feels, metrics);
-    if (data.hours.length > 1) {
-      const values = data.hours.map((h) => h.value);
+    if (forecast.length > 1) {
+      const values = forecast.map((h) => temperature(h.value));
       const low = Math.min(...values);
       const range = Math.max(...values) - low || 1;
       const ns = "http://www.w3.org/2000/svg";
@@ -89,7 +150,7 @@ export default class WeatherWidget extends APIWidget {
       svg.setAttribute("role", "img");
       svg.setAttribute(
         "aria-label",
-        `Прогноз на 12 часов: от ${format(low)} до ${format(Math.max(...values))} градусов.`,
+        `Прогноз на ${forecast.length} ч: от ${format(low)} до ${format(Math.max(...values))} градусов ${this.unit}.`,
       );
       const poly = document.createElementNS(ns, "polyline");
       poly.setAttribute(
@@ -108,9 +169,9 @@ export default class WeatherWidget extends APIWidget {
       svg.append(poly);
       const hours = el("div", "chart-labels");
       hours.append(
-        el("span", "", data.hours[0].time.slice(11, 16)),
-        el("span", "", "Ближайшие 12 часов"),
-        el("span", "", data.hours.at(-1).time.slice(11, 16)),
+        el("span", "", forecast[0].time.slice(11, 16)),
+        el("span", "", `Ближайшие ${forecast.length} ч`),
+        el("span", "", forecast.at(-1).time.slice(11, 16)),
       );
       this.resultNode.append(svg, hours);
     }
@@ -123,7 +184,12 @@ export default class WeatherWidget extends APIWidget {
     );
   }
   serialize() {
-    return { ...super.serialize(), city: this.city };
+    return {
+      ...super.serialize(),
+      city: this.city,
+      unit: this.unit,
+      hours: this.hours,
+    };
   }
   destroy() {
     this.select?.destroy();

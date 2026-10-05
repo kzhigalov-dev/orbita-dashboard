@@ -39,7 +39,7 @@ export function parseWeather(raw) {
         number(h.temperature_2m[i])
       )
         hours.push({ time: h.time[i], value: h.temperature_2m[i] });
-      if (hours.length === 12) break;
+      if (hours.length === 24) break;
     }
   }
   return {

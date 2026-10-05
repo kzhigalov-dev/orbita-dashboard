@@ -39,11 +39,17 @@ export default class SelectControl {
     // Portal: the menu cannot be clipped by a widget or its scrolling container.
     document.body.append(this.menu);
     this.sync();
-    this.listen(this.trigger, "click", () => this.menu.hidden ? this.open() : this.close());
+    this.listen(this.trigger, "click", () =>
+      this.menu.hidden ? this.open() : this.close(),
+    );
     this.listen(this.trigger, "keydown", (event) => this.keydown(event));
     this.listen(this.trigger, "blur", () => this.close());
     this.listen(document, "pointerdown", (event) => {
-      if (!this.root.contains(event.target) && !this.menu.contains(event.target)) this.close();
+      if (
+        !this.root.contains(event.target) &&
+        !this.menu.contains(event.target)
+      )
+        this.close();
     });
     // Prevent pointer focus from leaving the combobox before an option's click.
     this.listen(this.menu, "pointerdown", (event) => event.preventDefault());
@@ -51,18 +57,30 @@ export default class SelectControl {
     this.listen(document, "scroll", () => this.position(), true);
   }
   listen(target, name, handler, capture = false) {
-    target.addEventListener(name, handler, { signal: this.#controller.signal, capture });
+    target.addEventListener(name, handler, {
+      signal: this.#controller.signal,
+      capture,
+    });
   }
   sync() {
-    const selected = this.options.findIndex((option) => option.value === this.value);
+    const selected = this.options.findIndex(
+      (option) => option.value === this.value,
+    );
     this.text.textContent = this.options[selected]?.label ?? "";
-    this.items.forEach((item, index) => item.setAttribute("aria-selected", String(index === selected)));
+    this.items.forEach((item, index) =>
+      item.setAttribute("aria-selected", String(index === selected)),
+    );
   }
   open() {
     this.menu.hidden = false;
     this.trigger.setAttribute("aria-expanded", "true");
     this.position();
-    this.activate(Math.max(0, this.options.findIndex((option) => option.value === this.value)));
+    this.activate(
+      Math.max(
+        0,
+        this.options.findIndex((option) => option.value === this.value),
+      ),
+    );
   }
   close() {
     this.menu.hidden = true;
@@ -75,12 +93,19 @@ export default class SelectControl {
     const rect = this.trigger.getBoundingClientRect();
     const viewportWidth = document.documentElement.clientWidth;
     const viewportHeight = document.documentElement.clientHeight;
-    if (rect.bottom <= 0 || rect.top >= viewportHeight || !this.trigger.getClientRects().length) {
+    if (
+      rect.bottom <= 0 ||
+      rect.top >= viewportHeight ||
+      !this.trigger.getClientRects().length
+    ) {
       this.close();
       return;
     }
     const margin = 8;
-    const width = Math.min(Math.max(rect.width, 200), viewportWidth - margin * 2);
+    const width = Math.min(
+      Math.max(rect.width, 200),
+      viewportWidth - margin * 2,
+    );
     const below = viewportHeight - rect.bottom - margin * 2;
     const above = rect.top - margin * 2;
     const desired = Math.min(this.menu.scrollHeight, 280);
@@ -95,7 +120,9 @@ export default class SelectControl {
   }
   activate(index) {
     this.#active = index;
-    this.items.forEach((item, i) => item.classList.toggle("is-active", i === index));
+    this.items.forEach((item, i) =>
+      item.classList.toggle("is-active", i === index),
+    );
     this.trigger.setAttribute("aria-activedescendant", this.items[index].id);
     const item = this.items[index];
     const top = item.offsetTop;
@@ -114,14 +141,21 @@ export default class SelectControl {
     if (changed) this.onChange?.(next);
   }
   keydown(event) {
-    if (event.key === "Tab") { this.close(); return; }
+    if (event.key === "Tab") {
+      this.close();
+      return;
+    }
     if (event.key === "Escape") {
-      if (!this.menu.hidden) { event.preventDefault(); this.close(); }
+      if (!this.menu.hidden) {
+        event.preventDefault();
+        this.close();
+      }
       return;
     }
     if (["Enter", " "].includes(event.key)) {
       event.preventDefault();
-      if (this.menu.hidden) this.open(); else this.choose(this.#active);
+      if (this.menu.hidden) this.open();
+      else this.choose(this.#active);
       return;
     }
     if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
@@ -130,16 +164,33 @@ export default class SelectControl {
       if (wasClosed) this.open();
       if (event.key === "Home") this.activate(0);
       else if (event.key === "End") this.activate(this.items.length - 1);
-      else if (!wasClosed) this.activate(
-        (this.#active + (event.key === "ArrowDown" ? 1 : -1) + this.items.length) % this.items.length);
+      else if (!wasClosed)
+        this.activate(
+          (this.#active +
+            (event.key === "ArrowDown" ? 1 : -1) +
+            this.items.length) %
+            this.items.length,
+        );
       return;
     }
-    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (
+      event.key.length === 1 &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.altKey
+    ) {
       event.preventDefault();
       if (this.menu.hidden) this.open();
-      this.#search = Date.now() - this.#searchAt > 700 ? event.key : this.#search + event.key;
+      this.#search =
+        Date.now() - this.#searchAt > 700
+          ? event.key
+          : this.#search + event.key;
       this.#searchAt = Date.now();
-      const index = this.options.findIndex((option) => option.label.toLocaleLowerCase().startsWith(this.#search.toLocaleLowerCase()));
+      const index = this.options.findIndex((option) =>
+        option.label
+          .toLocaleLowerCase()
+          .startsWith(this.#search.toLocaleLowerCase()),
+      );
       if (index >= 0) this.activate(index);
     }
   }

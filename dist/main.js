@@ -50,16 +50,49 @@ const dashboard = new Dashboard({
       `${count} ${{ one: "виджет", few: "виджета", many: "виджетов", other: "виджета" }[label]}`;
     document.querySelector("#dashboard-empty").hidden = count > 0;
     const summary = summarizeTasks(widgets);
-    document.querySelector("#day-percent").textContent = summary.total ? `${summary.percent}%` : "—";
-    document.querySelector("#day-ring-value").style.strokeDashoffset = 100 - summary.percent;
-    document.querySelector(".day-summary").classList.toggle("all-done", summary.total > 0 && summary.remaining === 0);
-    document.querySelector("#day-done").textContent = summary.total ? `${summary.done} из ${summary.total} готово` : "Пока нет задач";
-    const taskWord = { one: "задача", few: "задачи", many: "задач", other: "задачи" }[new Intl.PluralRules("ru-RU").select(summary.remaining)];
-    document.querySelector("#day-remaining").textContent = !summary.total ? "Добавьте список из каталога" :
-      summary.remaining ? `${summary.remaining} ${taskWord} в работе` : "Всё сделано. Можно выдохнуть.";
+    document.querySelector("#day-percent").textContent = summary.total
+      ? `${summary.percent}%`
+      : "—";
+    document.querySelector("#day-ring-value").style.strokeDashoffset =
+      100 - summary.percent;
+    document
+      .querySelector(".day-summary")
+      .classList.toggle(
+        "all-done",
+        summary.total > 0 && summary.remaining === 0,
+      );
+    document.querySelector("#day-done").textContent = summary.total
+      ? `${summary.done} из ${summary.total} готово`
+      : "Пока нет задач";
+    const taskWord = {
+      one: "задача",
+      few: "задачи",
+      many: "задач",
+      other: "задачи",
+    }[new Intl.PluralRules("ru-RU").select(summary.remaining)];
+    document.querySelector("#day-remaining").textContent = !summary.total
+      ? "Добавьте список из каталога"
+      : summary.remaining
+        ? `${summary.remaining} ${taskWord} в работе`
+        : "Всё сделано. Можно выдохнуть.";
   },
 });
 const events = new AbortController();
+document.querySelector("#catalog-search").addEventListener(
+  "input",
+  (event) => {
+    const term = event.target.value.trim().toLocaleLowerCase("ru-RU");
+    addButtons.forEach((button) => {
+      button.hidden = !button.textContent
+        .toLocaleLowerCase("ru-RU")
+        .includes(term);
+    });
+    document.querySelector("#catalog-empty").hidden = addButtons.some(
+      (button) => !button.hidden,
+    );
+  },
+  { signal: events.signal },
+);
 addButtons.forEach((button) =>
   button.addEventListener(
     "click",

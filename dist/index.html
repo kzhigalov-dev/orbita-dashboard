@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f5f7ef" />
     <meta
       name="description"
-      content="Орбита — ваш рабочий день в одном месте. Независимые виджеты задач, погоды, курсов валют и мыслей на день."
+      content="Орбита — ваш рабочий день в одном месте. Девять типов виджетов: задачи, заметки, фокус, привычки, погода, валюты, мировое время, калькулятор и мысли."
     />
     <title>Орбита — мой рабочий день</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -25,15 +25,45 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Каталог виджетов">
         <a class="brand" href="./" aria-label="Орбита — главная"
-          ><span class="brand-mark" aria-hidden="true"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="22" fill="#385c42"/>
-  <g class="logo-orbit">
-    <ellipse cx="32" cy="32" rx="26" ry="12" transform="rotate(-35 32 32)" stroke="#c5dcb0" stroke-width="2.5"/>
-    <circle cx="52" cy="17" r="5" fill="#ebbd68" stroke="#385c42" stroke-width="2.5"/>
-  </g>
-  <circle cx="32" cy="32" r="13" fill="#385c42" stroke="#f5f7ef" stroke-width="5"/>
-</svg></span><span
-            >Орбита<span class="brand-caption">Ваш день в одной орбите</span></span
+          ><span class="brand-mark" aria-hidden="true"
+            ><svg
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 64 64"
+              fill="none"
+            >
+              <rect width="64" height="64" rx="22" fill="#385c42" />
+              <g class="logo-orbit">
+                <ellipse
+                  cx="32"
+                  cy="32"
+                  rx="26"
+                  ry="12"
+                  transform="rotate(-35 32 32)"
+                  stroke="#c5dcb0"
+                  stroke-width="2.5"
+                />
+                <circle
+                  cx="52"
+                  cy="17"
+                  r="5"
+                  fill="#ebbd68"
+                  stroke="#385c42"
+                  stroke-width="2.5"
+                />
+              </g>
+              <circle
+                cx="32"
+                cy="32"
+                r="13"
+                fill="#385c42"
+                stroke="#f5f7ef"
+                stroke-width="5"
+              /></svg></span
+          ><span
+            >Орбита<span class="brand-caption"
+              >Ваш день в одной орбите</span
+            ></span
           ></a
         >
         <div class="sidebar-section">
@@ -58,7 +88,14 @@
         </div>
         <div class="catalog">
           <h2>Добавить виджет</h2>
-          <p class="catalog-description">Соберите свой рабочий день.</p>
+          <p class="catalog-description">9 видов. Любые сочетания.</p>
+          <label class="sr-only" for="catalog-search">Найти виджет</label>
+          <input
+            id="catalog-search"
+            type="search"
+            placeholder="Найти виджет"
+            autocomplete="off"
+          />
           <div class="catalog-items">
             <button class="catalog-button" data-add="todo" type="button">
               <span class="catalog-icon" data-icon="tasks"></span
@@ -88,7 +125,44 @@
                 ><small>Небольшая смена перспективы</small></span
               ><span class="catalog-plus" aria-hidden="true">+</span>
             </button>
+            <button class="catalog-button" data-add="notes" type="button">
+              <span class="catalog-icon" data-icon="notes"></span
+              ><span
+                ><strong>Заметки</strong
+                ><small>Мысли, ссылки и черновики</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="focus" type="button">
+              <span class="catalog-icon" data-icon="focus"></span
+              ><span
+                ><strong>Фокус</strong><small>Таймер и перерывы</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="habits" type="button">
+              <span class="catalog-icon" data-icon="habits"></span
+              ><span
+                ><strong>Привычки</strong
+                ><small>Маленькие шаги каждый день</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="clock" type="button">
+              <span class="catalog-icon" data-icon="clock"></span
+              ><span
+                ><strong>Мировое время</strong
+                ><small>Города и часовые пояса</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
+            <button class="catalog-button" data-add="calculator" type="button">
+              <span class="catalog-icon" data-icon="calculator"></span
+              ><span
+                ><strong>Калькулятор</strong
+                ><small>Быстрые расчёты и история</small></span
+              ><span class="catalog-plus" aria-hidden="true">+</span>
+            </button>
           </div>
+          <p id="catalog-empty" class="muted" hidden>
+            Такого виджета пока нет. Попробуйте другое название.
+          </p>
         </div>
         <div class="sidebar-note">
           <span class="note-orbit" aria-hidden="true"></span>
@@ -99,7 +173,7 @@
         </div>
         <div class="sidebar-bottom">
           <span class="device-dot" aria-hidden="true"></span
-          ><span>Личное пространство</span><span class="version">v1.0</span>
+          ><span>Личное пространство</span><span class="version">v2.0</span>
         </div>
       </aside>
       <main id="workspace" tabindex="-1">
@@ -131,7 +205,14 @@
             <div class="day-ring" aria-hidden="true">
               <svg viewBox="0 0 100 100" fill="none">
                 <circle class="day-ring-track" cx="50" cy="50" r="42" />
-                <circle class="day-ring-value" id="day-ring-value" cx="50" cy="50" r="42" pathLength="100" />
+                <circle
+                  class="day-ring-value"
+                  id="day-ring-value"
+                  cx="50"
+                  cy="50"
+                  r="42"
+                  pathLength="100"
+                />
               </svg>
               <span id="day-percent">0%</span>
             </div>
@@ -155,7 +236,7 @@
           </button>
         </div>
         <footer class="workspace-footer">
-          <span>Ваши задачи остаются в этом браузере.</span
+          <span>Ваши планы и настройки остаются в этом браузере.</span
           ><a
             href="https://github.com/kzhigalov-dev/orbita-dashboard"
             target="_blank"
